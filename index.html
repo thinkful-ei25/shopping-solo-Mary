@@ -14,11 +14,17 @@
         <form id="js-shopping-list-form">
             <label for="shopping-list-entry">Add an item</label>
             <input type="text" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="e.g., broccoli">
-            <button type="submit">Add item</button>
+            <button type="submit">Add item</button> 
+            <input type='checkbox' id='toggle-completed-filter'/> Hide/Unhide 
         </form>
 
-    <div>
-        <input type='checkbox' id='toggle-completed-filter'/>
+    <div class='search-bar' >
+        <form id="searchform" action="" method="get">
+            <div class="search-bar-container">
+                <input type="search" autocomplete="off" name="SB" id="search-bar-input" placeholder="Search through list...">
+            </div>
+        </form>
+       
     </div>
 
         <ul class="shopping-list js-shopping-list">

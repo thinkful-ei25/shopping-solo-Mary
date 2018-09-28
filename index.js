@@ -9,9 +9,10 @@ items: [
   ],
   hideCompleted: false,
 
+
 };
 
-
+//STORE.items[itemIndex].name = (NEWvalue)
 
 function generateItemElement(item, itemIndex, template) {
   return `
@@ -24,6 +25,9 @@ function generateItemElement(item, itemIndex, template) {
         <button class="shopping-item-delete js-item-delete">
             <span class="button-label">delete</span>
         </button>
+        <button class="shopping-item-edit js-item-edit">
+        <span class="button-label">edit</span>
+    </button>
       </div>
     </li>`;
 }
@@ -115,6 +119,49 @@ toggleHideItems();
 renderShoppingList();
     })
 }
+
+
+function searchFunction(){
+    $("#search-bar-input").on("keyup", function() {
+        const value = $(this).val().toLowerCase();
+        STORE.filteredSearch =  STORE.items.filter(function(item) {
+         return item.name.indexOf(value) > -1
+        });
+        console.log(filteredSearch);
+      });
+}
+
+
+
+
+
+    
+
+
+
+
+function toggleEditItemName() {};
+//recieve the index where the item is stored in STORE then use the index
+//to add the new updated value into that index
+function handleToggleEdit() {};
+//this will listen for the edit button being clicked and then utilize the 'toggle'
+//if a toggle is what's needed
+//clicking OK will call the render function which in turn updates the object &
+//renders on the DOM
+//“click”, you need to change the element currently holding the name into an <input> tag so that the user can input the new title.
+
+
+
+
+
+
+
+
+
+
+
+
+
 // this function will be our callback when the page loads. it's responsible for
 // initially rendering the shopping list, and activating our individual functions
 // that handle new item submission and user clicks on the "check" and "delete" buttons
@@ -124,6 +171,7 @@ function handleShoppingList() {
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
+  searchFunction();
 }
 
 // when the page loads, call `handleShoppingList`
