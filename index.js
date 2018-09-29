@@ -1,16 +1,15 @@
 'use strict';
 
 const STORE = {
-items: [
-    {name: "apples", checked: false},
-    {name: "oranges", checked: false},
-    {name: "milk", checked: true},
-    {name: "bread", checked: false}
+  items: [
+    { name: "apples", checked: false },
+    { name: "oranges", checked: false },
+    { name: "milk", checked: true },
+    { name: "bread", checked: false }
   ],
   hideCompleted: false,
-
-
 };
+STORE.filteredSearch = STORE.items;
 
 //STORE.items[itemIndex].name = (NEWvalue)
 
@@ -37,16 +36,17 @@ function generateShoppingItemsString(shoppingList) {
   console.log("Generating shopping list element");
 
   const items = shoppingList.map((item, index) => generateItemElement(item, index));
-  
+
   return items.join("");
 }
 
 
 function renderShoppingList() {
-    let filteredItems = [...STORE.items ];
-    if (STORE.hideCompleted) {
-    filteredItems =filteredItems.filter(item => !item.checked);
-    }
+  let marold = STORE.filteredSearch;
+  let filteredItems =  marold;
+  if (STORE.hideCompleted) {
+    filteredItems = filteredItems.filter(item => !item.checked);
+  }
   // render the shopping list in the DOM
   console.log('`renderShoppingList` ran');
   const shoppingListItemsString = generateShoppingItemsString(filteredItems);
@@ -58,13 +58,16 @@ function renderShoppingList() {
 
 function addItemToShoppingList(itemName) {
   console.log(`Adding "${itemName}" to shopping list`);
-  STORE.items.push({name: itemName, checked: false});
+  STORE.items.push({ name: itemName, checked: false });
 }
 
 function handleNewItemSubmit() {
-  $('#js-shopping-list-form').submit(function(event) {
+  $('#js-shopping-list-form').submit(function (event) {
     event.preventDefault();
     console.log('`handleNewItemSubmit` ran');
+
+    //if val().length === 0
+    //throw message "you need to enter an item name"
     const newItemName = $('.js-shopping-list-entry').val();
     $('.js-shopping-list-entry').val('');
     addItemToShoppingList(newItemName);
@@ -94,56 +97,57 @@ function handleItemCheckClicked() {
   });
 }
 
-function deleteItem(itemIndex){
-    STORE.items.splice(itemIndex,1);
+function deleteItem(itemIndex) {
+  STORE.items.splice(itemIndex, 1);
 }
 
 
 function handleDeleteItemClicked() {
-    $('.js-shopping-list').on('click', `.js-item-delete`, event => {
-        const itemIndex =getItemIndexFromElement(event.target);
-        deleteItem(itemIndex);
+  $('.js-shopping-list').on('click', `.js-item-delete`, event => {
+    const itemIndex = getItemIndexFromElement(event.target);
+    deleteItem(itemIndex);
 
-    });
+  });
 }
 
 //
 function toggleHideItems() {
-    STORE.hideCompleted = !STORE.hideCompleted;
+  STORE.hideCompleted = !STORE.hideCompleted;
 }
 
 function handleToggleHideClick() {
-    $('#toggle-completed-filter').click(() => {
+  $('#toggle-completed-filter').click(() => {
 
-toggleHideItems();
-renderShoppingList();
-    })
+    toggleHideItems();
+    renderShoppingList();
+  })
 }
 
 
-function searchFunction(){
-    $("#search-bar-input").on("keyup", function() {
-        const value = $(this).val().toLowerCase();
-        STORE.filteredSearch =  STORE.items.filter(function(item) {
-         return item.name.indexOf(value) > -1
-        });
-        console.log(filteredSearch);
-      });
+function searchFunction() {
+  $("#search-bar-input").on("keyup", function () {
+    const value = $(this).val().toLowerCase();
+    STORE.filteredSearch = STORE.items.filter(function (item) {
+      return item.name.indexOf(value) > -1
+    });
+    console.log(STORE.filteredSearch);
+    renderShoppingList();
+  });
 }
 
 
 
 
 
-    
 
 
 
 
-function toggleEditItemName() {};
+
+function toggleEditItemName() { };
 //recieve the index where the item is stored in STORE then use the index
 //to add the new updated value into that index
-function handleToggleEdit() {};
+function handleToggleEdit() { };
 //this will listen for the edit button being clicked and then utilize the 'toggle'
 //if a toggle is what's needed
 //clicking OK will call the render function which in turn updates the object &
