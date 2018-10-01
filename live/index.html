@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Long List</title>
+  <div class="mainimg"><img src="main.png"></div>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="container">
+    <h1><img src="header.png"></h1>
+        <form id="js-shopping-list-form">
+            <label for="shopping-list-entry">Add an item!!</label>
+            <input type="text" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="Type here!">
+            <button type="submit">Add +</button><br>
+            <label for="shopping-list-entry">Search item </label>
+            <input type = "text" id="search-bar" placeholder="Looking for something?"> 
+        </form>
+        <div>
+          <input type = "checkbox" name = "hidecheckeditems" value='false' id='toggle-hide-checked'> Hide Checked Items
+        </div>
+        <ul class="shopping-list js-shopping-list">
+        </ul>
+    </div>
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+</body>
+</html>
