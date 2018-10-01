@@ -1,23 +1,22 @@
 'use strict';
 
 const STORE = {
-items: [
-    {name: "apples", checked: false},
-    {name: "oranges", checked: false},
-    {name: "milk", checked: true},
-    {name: "bread", checked: false}
+  items:  [
+    {name: 'apples', checked: false, edit: false},
+    {name: 'oranges', checked: false, edit: true},
+    {name: 'milk', checked: true, edit: false},
+    {name: 'bread', checked: false, edit: false}
   ],
-  hideCompleted: false,
-
-
+  hideCompleted:  false,
+  searchedItems: [],
 };
 
-//STORE.items[itemIndex].name = (NEWvalue)
 
 function generateItemElement(item, itemIndex, template) {
   return `
     <li class="js-item-index-element" data-item-index="${itemIndex}">
-      <span class="shopping-item js-shopping-item ${item.checked ? "shopping-item__checked" : ''}">${item.name}</span>
+      <span class="shopping-item js-shopping-item"> <span class="img">${item.checked ? '<img src="checked.png">' : '<img src="unchecked.png">'}</span>
+      <input type="text" value="${item.name}" ${item.edit ? '""><button class="edit-button">OK</button>' : 'disabled>'}</span>
       <div class="shopping-item-controls">
         <button class="shopping-item-toggle js-item-toggle">
             <span class="button-label">check</span>
@@ -26,39 +25,48 @@ function generateItemElement(item, itemIndex, template) {
             <span class="button-label">delete</span>
         </button>
         <button class="shopping-item-edit js-item-edit">
-        <span class="button-label">edit</span>
-    </button>
+            <span class="button-label">edit</span>
+        </button>
       </div>
     </li>`;
 }
 
 
 function generateShoppingItemsString(shoppingList) {
-  console.log("Generating shopping list element");
+  console.log('Generating shopping list element');
 
   const items = shoppingList.map((item, index) => generateItemElement(item, index));
   
-  return items.join("");
+  return items.join('');
 }
 
 
 function renderShoppingList() {
-    let filteredItems = [...STORE.items ];
-    if (STORE.hideCompleted) {
-    filteredItems =filteredItems.filter(item => !item.checked);
-    }
   // render the shopping list in the DOM
-  console.log('`renderShoppingList` ran');
+  let filteredItems = [...STORE.items];
+
+  if (STORE.searchedItems.length !== 0){
+    //toggle visibily of searched items
+    filteredItems = STORE.searchedItems;
+    //console.log('filtered items:' + filteredItems);
+  }
+
+  if (STORE.hideCompleted){
+    //toggle visibility of checked items
+    filteredItems = filteredItems.filter(item => !item.checked);
+  }
+
   const shoppingListItemsString = generateShoppingItemsString(filteredItems);
 
   // insert that HTML into the DOM
   $('.js-shopping-list').html(shoppingListItemsString);
+  console.log('`renderShoppingList` ran');
 }
 
 
 function addItemToShoppingList(itemName) {
   console.log(`Adding "${itemName}" to shopping list`);
-  STORE.items.push({name: itemName, checked: false});
+  STORE.items.push({name: itemName, checked: false, edit:false});
 }
 
 function handleNewItemSubmit() {
@@ -73,7 +81,7 @@ function handleNewItemSubmit() {
 }
 
 function toggleCheckedForListItem(itemIndex) {
-  console.log("Toggling checked property for item at index " + itemIndex);
+  console.log('Toggling checked property for item at index ' + itemIndex);
   STORE.items[itemIndex].checked = !STORE.items[itemIndex].checked;
 }
 
@@ -86,7 +94,7 @@ function getItemIndexFromElement(item) {
 }
 
 function handleItemCheckClicked() {
-  $('.js-shopping-list').on('click', `.js-item-toggle`, event => {
+  $('.js-shopping-list').on('click', '.js-item-toggle', event => {
     console.log('`handleItemCheckClicked` ran');
     const itemIndex = getItemIndexFromElement(event.currentTarget);
     toggleCheckedForListItem(itemIndex);
@@ -94,85 +102,98 @@ function handleItemCheckClicked() {
   });
 }
 
-function deleteItem(itemIndex){
-    STORE.items.splice(itemIndex,1);
+function deleteListItem(itemIndex) {
+  console.log(`Deleting item at index  ${itemIndex} from shopping list`);
+  STORE.items.splice(itemIndex, 1);
 }
 
 
 function handleDeleteItemClicked() {
-    $('.js-shopping-list').on('click', `.js-item-delete`, event => {
-        const itemIndex =getItemIndexFromElement(event.target);
-        deleteItem(itemIndex);
+  // like in `handleItemCheckClicked`, we use event delegation
+  $('.js-shopping-list').on('click', '.js-item-delete', event => {
+    // get the index of the item in STORE
+    const itemIndex = getItemIndexFromElement(event.currentTarget);
+    // delete the item
+    deleteListItem(itemIndex);
+    // render the updated shopping list
+    renderShoppingList();
+  });
+}
+// function editItemName(itemIndex) {
+//   console.log(`Editing item at index  ${itemIndex} on shopping list`);
 
+// }
+
+// function editListItem(itemIndex, itemEdit) {
+//   STORE.items.splice(itemIndex, 1, itemEdit);
+// }
+// function handleEditItemName() {
+//   $('.js-shopping-list').on('click', '.js-item-edit', event => {
+//     console.log('`handleEditItemName` ran');
+//     const itemIndex = getItemIndexFromElement(event.currentTarget);
+//     editChangeForm(itemIndex);
+//   });
+// }
+function toggleEditItems(itemIndex) {
+  console.log('Toggling editing property for item at index ' + itemIndex);
+  STORE.items[itemIndex].edit = !STORE.items[itemIndex].edit;
+
+}
+//STORE.item[itemIndex.name = $(this).val();
+function handleEditItemClicked() {
+  $('.js-shopping-list').on('click', '.js-item-edit', event =>{
+    toggleEditItems(STORE.items);
+    renderShoppingList();
+  });
+}
+
+function toggleHideItems(itemIndex){
+  console.log('Toggling checked property for item at index ' + itemIndex);
+  STORE.hideCompleted = !STORE.hideCompleted;
+}
+
+function handleToggleHideClicked(){
+  $('#toggle-hide-checked').click(() =>{
+
+    //STORE
+    toggleHideItems(STORE.items);
+    //Render
+    renderShoppingList();
+  });
+}
+
+function handleSearchInputted(){
+  // prevents pressing enter on search bar which resulted in another item being added
+  $('#search-bar').keypress(function (event){
+    if (event.keyCode ===13){
+      event.preventDefault();
+    }
+  });
+
+  $('#search-bar').on('keyup', function(){
+  // assigns search-bar value to variable then filters
+    let value = $(this).val().toLowerCase();
+    STORE.searchedItems = STORE.items.filter(function(item){
+      return item.name.toLowerCase().indexOf(value)> -1;
     });
-}
-
-//
-function toggleHideItems() {
-    STORE.hideCompleted = !STORE.hideCompleted;
-}
-
-function handleToggleHideClick() {
-    $('#toggle-completed-filter').click(() => {
-
-toggleHideItems();
-renderShoppingList();
-    })
-}
-
-
-function searchFunction(){
-    $("#search-bar-input").on("keyup", function() {
-        const value = $(this).val().toLowerCase();
-        STORE.filteredSearch =  STORE.items.filter(function(item) {
-         return item.name.indexOf(value) > -1
-        });
-        console.log(filteredSearch);
-      });
+    // render
+    renderShoppingList();
+  });
 }
 
 
 
-
-
-    
-
-
-
-
-function toggleEditItemName() {};
-//recieve the index where the item is stored in STORE then use the index
-//to add the new updated value into that index
-function handleToggleEdit() {};
-//this will listen for the edit button being clicked and then utilize the 'toggle'
-//if a toggle is what's needed
-//clicking OK will call the render function which in turn updates the object &
-//renders on the DOM
-//“click”, you need to change the element currently holding the name into an <input> tag so that the user can input the new title.
-
-
-
-
-
-
-
-
-
-
-
-
-
-// this function will be our callback when the page loads. it's responsible for
-// initially rendering the shopping list, and activating our individual functions
-// that handle new item submission and user clicks on the "check" and "delete" buttons
-// for individual shopping list items.
 function handleShoppingList() {
   renderShoppingList();
   handleNewItemSubmit();
   handleItemCheckClicked();
   handleDeleteItemClicked();
-  searchFunction();
+  handleToggleHideClicked();
+  handleSearchInputted();
+  handleEditItemClicked();
 }
 
 // when the page loads, call `handleShoppingList`
 $(handleShoppingList);
+
+// search 

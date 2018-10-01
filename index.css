@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  background-color: #ecd6c5;
 }
 
 body {
@@ -10,14 +11,34 @@ button, input[type="text"] {
   padding: 5px;
 }
 
+input[disabled] {
+  border: none;
+  background: none;
+  padding-bottom: 20px;
+
+}
 button:hover {
   cursor: pointer;
 }
 
-.hidden {
-  display: none;
+#search-bar{
+  margin-left: 9px;
 }
 
+}
+img { 
+  vertical-align: middle;
+}
+
+h1{
+  margin-bottom: 10px;
+  margin-left: -100px;
+
+div.mainimg {
+  margin-top: 50px;
+  margin-left: 100px;
+}
+}
 #shopping-list-item {
   width: 250px;
 }
@@ -34,7 +55,7 @@ button:hover {
 
 .shopping-list > li {
   margin-bottom: 20px;
-  border: 1px solid grey;
+  border: 1px solid #1135af;
   padding: 20px;
 }
 
@@ -46,6 +67,8 @@ button:hover {
   margin-bottom: 15px;
 }
 
-.shopping-item__checked {
-  text-decoration: line-through;
+
+.hidden {
+  display: none;
 }
+
