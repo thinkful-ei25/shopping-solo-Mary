@@ -4,7 +4,7 @@ const STORE = {
   items:  [
     {name: 'apples', checked: false, edit: false},
     {name: 'oranges', checked: false, edit: true},
-    {name: 'milk', checked: true, edit: false},
+    {name: 'milk', checked: false, edit: false},
     {name: 'bread', checked: false, edit: false}
   ],
   hideCompleted:  false,
@@ -16,7 +16,7 @@ function generateItemElement(item, itemIndex, template) {
   return `
     <li class="js-item-index-element" data-item-index="${itemIndex}">
       <span class="shopping-item js-shopping-item"> <span class="img">${item.checked ? '<img src="checked.png">' : '<img src="unchecked.png">'}</span>
-      <input type="text" value="${item.name}" ${item.edit ? '""><button class="edit-button">OK</button>' : 'disabled>'}</span>
+      <input type="text" class="input-item-name" value="${item.name}" ${item.edit ? '""><button class="edit-button">OK</button>' : 'disabled>'}</span>
       <div class="shopping-item-controls">
         <button class="shopping-item-toggle js-item-toggle">
             <span class="button-label">check</span>
@@ -66,8 +66,12 @@ function renderShoppingList() {
 
 function addItemToShoppingList(itemName) {
   console.log(`Adding "${itemName}" to shopping list`);
-  STORE.items.push({name: itemName, checked: false, edit:false});
-}
+  STORE.items.push({
+    name: itemName, 
+    checked: false, 
+    edit:false});
+  }
+
 
 function handleNewItemSubmit() {
   $('#js-shopping-list-form').submit(function(event) {
@@ -134,15 +138,35 @@ function handleDeleteItemClicked() {
 //     editChangeForm(itemIndex);
 //   });
 // }
-function toggleEditItems(itemIndex) {
+
+
+function addNewName(itemIndex, newName) {
+  STORE.items[itemIndex].name = newName;
+}
+function handleOKClick(){
+  $('.js-shopping-list').on('click', '.edit-button', function(event) {
+const itemIndex = getItemIndexFromElement($(this));
+const newName = $(this).parent().children('.input-item-name').val();
+console.log(itemIndex);
+console.log(newName);
+addNewName(itemIndex, newName);
+toggleEditItem(itemIndex);
+renderShoppingList();
+  });
+}
+
+function toggleEditItem(itemIndex) {
   console.log('Toggling editing property for item at index ' + itemIndex);
   STORE.items[itemIndex].edit = !STORE.items[itemIndex].edit;
 
 }
 //STORE.item[itemIndex.name = $(this).val();
 function handleEditItemClicked() {
-  $('.js-shopping-list').on('click', '.js-item-edit', event =>{
-    toggleEditItems(STORE.items);
+  $('.js-shopping-list').on('click', '.js-item-edit', function(event) {
+    let test = $(this).closest('li');
+    console.log(test);
+    const itemIndex = getItemIndexFromElement($(this).closest('li'))
+    toggleEditItem(itemIndex);
     renderShoppingList();
   });
 }
@@ -191,6 +215,7 @@ function handleShoppingList() {
   handleToggleHideClicked();
   handleSearchInputted();
   handleEditItemClicked();
+  handleOKClick();
 }
 
 // when the page loads, call `handleShoppingList`
